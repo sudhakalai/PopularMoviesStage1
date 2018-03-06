@@ -5,9 +5,13 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/iv_poster"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" />-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_movie_name"/>
 
 </LinearLayout>

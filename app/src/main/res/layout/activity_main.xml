@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.popularmoviesstage1.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
+   <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_movies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

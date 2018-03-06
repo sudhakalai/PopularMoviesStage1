@@ -5,69 +5,65 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 /**
- * Created by Kalaimaran on 27-Feb-18.
+ * Created by Kalaimaran on 02-Mar-18.
  */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>{
 
-    private int mNoOfMovies;
-    final private GridItemClickLitener mOnClickListener;
+    private Context mContext;
+    private ArrayList<Movie> mMovies = new ArrayList<>();
 
-    public MovieAdapter(int noOfMovies, GridItemClickLitener onClickListener){
-        mNoOfMovies = noOfMovies;
-        mOnClickListener = onClickListener;
-    }
-
-    public interface GridItemClickLitener{
-        void onGridItemClick(int clickedItemIndex);
+    public MovieAdapter(Context context, ArrayList<Movie> movies){
+         mContext= context;
+         mMovies = movies;
     }
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        int layoutIdForGridItem = R.layout.movie_grid_item;
-        LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = inflater.inflate(R.layout.movie_grid_item, parent, false);
 
-        View view = inflater.inflate(layoutIdForGridItem, parent, shouldAttachToParentImmediately);
-        MovieViewHolder viewHolder = new MovieViewHolder(view);
-        return viewHolder;
+        return new MovieViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
-        holder.bind();
+
+        holder.movie = mMovies.get(position);
+
+        String movieName = holder.movie.getOrginalTitle();
+
+        holder.bind(movieName);
 
     }
 
     @Override
     public int getItemCount() {
-        return mNoOfMovies;
+        if(mMovies!= null){
+            return mMovies.size();
+        }else{
+            return 0;
+        }
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class MovieViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView posterImageView;
+        public TextView movieNameTV;
+        public Movie movie;
 
         public MovieViewHolder(View itemView) {
             super(itemView);
 
-            posterImageView = (ImageView) itemView.findViewById(R.id.iv_poster);
-
-            itemView.setOnClickListener(this);
+            movieNameTV = itemView.findViewById(R.id.tv_movie_name);
         }
 
-        void bind (){
-            posterImageView.setImageResource(R.drawable.ic_launcher_foreground);
-        }
-
-        @Override
-        public void onClick(View view) {
-            int clickedPosition = getAdapterPosition();
-            mOnClickListener.onGridItemClick(clickedPosition);
+        public void bind(String movieName){
+            movieNameTV.setText(movieName);
         }
     }
 }

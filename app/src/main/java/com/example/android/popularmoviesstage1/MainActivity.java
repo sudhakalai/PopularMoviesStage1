@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,8 +15,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity  {
 
-    private static RecyclerView recyclerView;
-    private static MovieAdapter movieAdapter;
+    private RecyclerView recyclerView;
+    private MovieAdapter movieAdapter;
     private static ArrayList<Movie> movieArrayList;
     private int popularPath = 1;
     private int topRatedPath = 2;
@@ -32,8 +31,6 @@ public class MainActivity extends AppCompatActivity  {
         recyclerView = findViewById(R.id.rv_movies);
 
         movieArrayList = new ArrayList<>();
-
-        Log.v("testarray", String.valueOf(movieArrayList.size()));
 
        new MovieAsyncTask().execute(MovieUtils.buildUrl(popularPath));
 
@@ -83,7 +80,7 @@ public class MainActivity extends AppCompatActivity  {
        @Override
        protected ArrayList<Movie> doInBackground(URL... urls) {
            URL searchUrl = urls[0];
-           String json="";
+           String json;
            movieArrayList = new ArrayList<>();
            try {
                json = MovieUtils.getResponseFromHttpUrl(searchUrl);

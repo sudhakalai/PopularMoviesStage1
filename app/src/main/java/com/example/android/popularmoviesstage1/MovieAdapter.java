@@ -5,27 +5,39 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 /**
- * Created by Kalaimaran on 02-Mar-18.
+ * This is the recycler adapter class
  */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>{
 
-    private Context mContext;
+    //Declaring global variables
     private ArrayList<Movie> mMovies = new ArrayList<>();
+    private final MovieAdapterOnClickHandler mClickHandler;
 
-    public MovieAdapter(Context context, ArrayList<Movie> movies){
-         mContext= context;
+
+    //This the interface to handle click events
+    public interface MovieAdapterOnClickHandler{
+        void onClick(Movie movie);
+    }
+
+    //Constructor
+    public MovieAdapter(ArrayList<Movie> movies, MovieAdapterOnClickHandler clickHandler){
          mMovies = movies;
+         mClickHandler = clickHandler;
     }
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.movie_grid_item, parent, false);
 
         return new MovieViewHolder(view);
@@ -36,9 +48,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         holder.movie = mMovies.get(position);
 
+        String moviePosterUrl = holder.movie.getImageUrl();
         String movieName = holder.movie.getOrginalTitle();
 
-        holder.bind(movieName);
+        holder.bind(moviePosterUrl, movieName);
 
     }
 
@@ -51,19 +64,47 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder{
+    /**
+     * This method notifies when the ArrayList has changed
+     * @param list
+     */
+    public void setMovieList(ArrayList<Movie> list){
+        this.mMovies = list;
+        notifyDataSetChanged();
+    }
 
-        public TextView movieNameTV;
-        public Movie movie;
+    //ViewHolder class
+    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public MovieViewHolder(View itemView) {
+        private ImageView moviePosterIv;
+        private TextView nameTv;
+        private Movie movie;
+        private Context context;
+
+        private MovieViewHolder(View itemView) {
             super(itemView);
 
-            movieNameTV = itemView.findViewById(R.id.tv_movie_name);
+            context = itemView.getContext();
+
+            moviePosterIv= itemView.findViewById(R.id.iv_poster_grid);
+            nameTv = itemView.findViewById(R.id.tv_name);
+            itemView.setOnClickListener(this);
         }
 
-        public void bind(String movieName){
-            movieNameTV.setText(movieName);
+        private void bind(String imageUrl, String movieName){
+            String posterUrl = "http://image.tmdb.org/t/p/w342/" + imageUrl;
+            Picasso.with(context)
+                    .load(posterUrl)
+                    .into(moviePosterIv);
+
+            nameTv.setText(movieName);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int adapterPosition = getAdapterPosition();
+            Movie clickedMovie = mMovies.get(adapterPosition);
+            mClickHandler.onClick(clickedMovie);
         }
     }
 }

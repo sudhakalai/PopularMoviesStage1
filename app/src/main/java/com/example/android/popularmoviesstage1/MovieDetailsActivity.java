@@ -35,10 +35,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         //Getting the value from the intent
         Intent intent = getIntent();
-        Movie movie;
-        //if (intent != null) {
-            //if (intent.hasExtra(Intent.EXTRA_TEXT)) {
-                movie = (Movie) intent.getSerializableExtra("MovieObject");
+
+        if (intent != null) {
+            if (intent.hasExtra("MovieObject")) {
+                Movie movie = (Movie) intent.getSerializableExtra("MovieObject");
 
                 //Setting the values to the views
                 nameTv.setText(movie.getOrginalTitle());
@@ -52,7 +52,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 Picasso.with(this)
                         .load(posterPath)
                         .into(posterIv);
-           // }
-       // }
+           }
+        }
     }
 }
